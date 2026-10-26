@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="총장선거 홍보 홈페이지 레이아웃 초안">
+<title>남진 | 총장선거</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="./styles.css">
+<script src="./data.js" defer></script><script src="./app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="mobile-header"><a href="#home">남진</a><button id="menu-open" aria-controls="navigation" aria-expanded="false" aria-label="메뉴 열기">☰</button></header>
+<div id="backdrop" class="backdrop" hidden></div>
+<aside id="navigation" class="sidebar" aria-label="주 메뉴 영역">
+<div class="sidebar-top"><a href="#home" class="home-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h5v-7h4v7h5V10"/></svg>홈</a><button id="menu-close" aria-label="메뉴 닫기">×</button></div>
+<div class="identity">남진<span>총장선거</span></div>
+<nav aria-label="주 메뉴" id="menu"></nav><div class="sidebar-bottom">[보조 문구]<span>총장선거 홍보 홈페이지</span></div>
+</aside>
+<main id="main" tabindex="-1">
+<section id="home" class="hero" aria-labelledby="hero-title"><div class="hero-copy"><span class="eyebrow">제11대 총장선거</span><h1 id="hero-title"><span>Beyond Seoul,</span><span>Above Globe,</span><span class="nowrap">미래를 선도하는 시대(市大)</span></h1><p class="candidate">남진</p><p class="intro">서울시립대학교 제11대 총장예비후보자<br>도시과학대학 도시공학과 교수</p><div class="actions"><a class="button primary" href="#priorities">핵심 과제 보기 <span>↗</span></a><a class="button secondary" href="#pledges">공약 보기 <span>↗</span></a></div></div><div class="portrait"><img src="./president_assets/jin_nam.jpg" alt="남진 총장 후보자"></div><a class="scroll-cue" href="#interview">자세한 비전 <span>↓</span></a></section>
+<section id="interview" class="section"><div class="section-heading"><div><span class="eyebrow">01 / INTERVIEW</span><h2>인터뷰 영상</h2></div><p>[인터뷰 소개]</p></div><div class="interview-layout"><div id="video-slot" class="video-placeholder"><span class="play-icon" aria-hidden="true">▷</span><span>영상 준비 중</span></div><div class="video-copy"><span class="status">준비 중</span><h3>[인터뷰 제목]</h3><p>[인터뷰 소개]</p><div class="small-rule"></div><span class="muted">영상은 등록 후 제공됩니다.</span></div></div></section>
+<section id="priorities" class="section tinted"><div class="section-heading"><div><span class="eyebrow">02 / PRIORITIES</span><h2>핵심 과제</h2></div><p>[핵심 과제 소개]</p></div><div id="priority-list" class="priority-grid"></div></section>
+<section id="pledges" class="section pledge-section"><div class="section-heading"><div><span class="eyebrow">03 / PLEDGES</span><h2>공약</h2></div><p>[공약 안내]</p></div><div id="pledge-list"></div></section>
+<section id="roadmap" class="section roadmap-section"><div class="section-heading"><div><span class="eyebrow">04 / ROADMAP</span><h2>4년 로드맵</h2></div><p>[로드맵 소개]</p></div><div id="roadmap-list" class="timeline"></div></section>
+<section id="achievements" class="section"><div class="section-heading"><div><span class="eyebrow">05 / ACHIEVEMENTS</span><h2>주요 업적</h2></div><p>[주요 업적 소개]</p></div><div id="achievement-list" class="achievement-list"></div></section>
+<section id="downloads" class="section tinted"><div class="section-heading"><div><span class="eyebrow">06 / DOWNLOADS</span><h2>파일 받기</h2></div><p>[자료 안내]</p></div><div id="download-list" class="download-list"></div></section>
+<footer><strong>남진</strong><div><p>[운영 주체]</p><p>[문의처]</p></div><span>총장선거 홍보 홈페이지</span></footer>
+</main><a id="back-top" class="back-top" href="#home" aria-label="맨 위로 이동" hidden>↑</a>
+<noscript><div class="noscript">반복 콘텐츠와 메뉴를 표시하려면 JavaScript를 활성화해주세요.</div></noscript>
+</body></html>
