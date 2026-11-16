@@ -13,6 +13,49 @@ setHTML('pledge-list', data.pledges.map((group, i) => `<section class="audience"
 setHTML('roadmap-list', data.roadmap.map(item => `<article class="milestone"><span>${escapeHTML(item.year)}</span><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.description)}</p></article>`).join(''));
 setHTML('achievement-list', data.achievements.map((item, i) => `<article class="achievement-row"><span>${number(i)}</span><div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.description)}</p></div><time>${escapeHTML(item.period)}</time></article>`).join(''));
 setHTML('download-list', data.downloads.map(item => { const url = safeUrl(item.url); return `<article class="download-row"><span class="file-icon" aria-hidden="true">↓</span><div class="file-info"><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.format)} · ${escapeHTML(item.size)}</p></div>${url ? `<a href="${escapeHTML(url)}" download aria-label="${escapeHTML(item.title)} 다운로드">다운로드 ↓</a>` : '<button type="button" disabled>준비 중</button>'}</article>`; }).join(''));
+if (data.archive && document.getElementById('archive-list')) {
+  let isArchiveExpanded = false;
+  const renderArchive = () => {
+    setHTML('archive-list', data.archive.map((item, i) => {
+      const isHidden = !isArchiveExpanded && i >= 3;
+      const url = safeUrl(item.url);
+      return `<article class="archive-card${isHidden ? ' hidden' : ''}">
+        <div class="archive-card-top">
+          <div class="archive-meta">
+            <time class="archive-date">${escapeHTML(item.date)}</time>
+            ${item.category ? `<span class="archive-category">${escapeHTML(item.category)}</span>` : ''}
+          </div>
+          <h3 class="archive-title">${escapeHTML(item.title)}</h3>
+        </div>
+        <div class="archive-divider" aria-hidden="true"></div>
+        <div class="archive-body">
+          <p class="archive-keywords">${escapeHTML(item.keywords)}</p>
+          <p class="archive-media">${escapeHTML(item.media)}</p>
+        </div>
+        <div class="archive-footer">
+          ${url ? `<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="archive-link" aria-label="${escapeHTML(item.title)} 원문 보기 (새 창)">원문 보기 →</a>` : ''}
+        </div>
+      </article>`;
+    }).join(''));
+  };
+  renderArchive();
+
+  const toggleBtn = document.getElementById('archive-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      isArchiveExpanded = !isArchiveExpanded;
+      renderArchive();
+      toggleBtn.setAttribute('aria-expanded', String(isArchiveExpanded));
+      toggleBtn.innerHTML = isArchiveExpanded
+        ? '아카이브 접기 <span class="arrow">↑</span>'
+        : `모두 보기 (총 ${data.archive.length}건) <span class="arrow">↓</span>`;
+      if (!isArchiveExpanded) {
+        const target = document.getElementById('archive');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+}
 if (data.interview.embedUrl) {
   const url = safeUrl(data.interview.embedUrl);
   if (url && new URL(url).protocol === 'https:') {
@@ -68,7 +111,7 @@ function updateScroll() {
   const threshold = mobile.matches ? 120 : 85;
   let active = sections[0].id;
   for (const section of sections) if (section.getBoundingClientRect().top <= threshold) active = section.id;
-  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = 'downloads';
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = 'archive';
   for (const link of links) {
     const id = link.hash.slice(1), selected = id === active;
     link.classList.toggle('active', selected);
