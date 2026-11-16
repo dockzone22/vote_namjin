@@ -2,26 +2,52 @@
    실제 자료가 확정되기 전까지 자리표시자를 유지하세요. */
 window.SITE_DATA = {
   menu: [
-    { id: 'interview', label: '인터뷰 영상' },
-    { id: 'priorities', label: '핵심 과제' },
-    { id: 'pledges', label: '공약', children: [
-      { id: 'faculty', label: '교수' }, { id: 'staff', label: '직원' }, { id: 'students', label: '학생' }
-    ] },
-        { id: 'roadmap', label: '4년 로드맵' },
-    { id: 'achievements', label: '주요 업적' },
+    { id: 'why', label: '왜 남진인가?' },
+    { id: 'journey', label: '걸어온 길' },
+    { id: 'pledges', label: '7대 대표공약' },
+    { id: 'campus', label: '캠퍼스 환경개선' },
+    { id: 'cardnews', label: '공약 카드뉴스' },
     { id: 'downloads', label: '파일 받기' },
     { id: 'archive', label: '아카이브' }
   ],
-  // embedUrl에 신뢰할 수 있는 HTTPS 영상 임베드 주소를 입력하세요. 자동재생은 사용하지 않습니다.
-  interview: { embedUrl: '', title: '[인터뷰 제목]' },
-  priorities: Array.from({ length: 3 }, () => ({ title: '[핵심 과제 제목]', description: '[설명]' })),
-  pledges: [
-    { id: 'faculty', label: '교수', items: Array.from({ length: 3 }, () => ({ title: '[공약 제목]', description: '[공약 설명]' })) },
-    { id: 'staff', label: '직원', items: Array.from({ length: 3 }, () => ({ title: '[공약 제목]', description: '[공약 설명]' })) },
-    { id: 'students', label: '학생', items: Array.from({ length: 3 }, () => ({ title: '[공약 제목]', description: '[공약 설명]' })) }
+  // 대표 영상: 향후 영상 파일 경로(HTTPS URL 또는 상대경로)를 입력하면 비디오로 전환됩니다.
+  heroVideo: {
+    src: '',
+    poster: '',
+    title: '남진 총장 후보 대표 영상'
+  },
+  // 왜 남진인가? 3개 분야
+  why: [
+    { id: 'seoul', title: '서울시', description: '[서울시 관련 경력 및 설명]' },
+    { id: 'public', title: '공공기관', description: '[공공기관 관련 경력 및 설명]' },
+    { id: 'uos', title: '서울시립대', description: '[서울시립대 관련 경력 및 설명]' }
   ],
-  roadmap: Array.from({ length: 4 }, (_, i) => ({ year: `${i + 1}차 연도`, title: '[연차별 목표]', description: '[주요 추진 내용]' })),
-  achievements: Array.from({ length: 4 }, () => ({ title: '[업적 제목]', period: '[관련 기간]', description: '[설명]' })),
+  // 걸어온 길: 경력 세로 목록
+  journey: [
+    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
+    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
+    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
+    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' }
+  ],
+  // 7대 대표공약: 정확히 7개
+  pledges7: [
+    { no: '01', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '02', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '03', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '04', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '05', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '06', title: '[공약 제목]', summary: '[공약 요약]' },
+    { no: '07', title: '[공약 제목]', summary: '[공약 요약]' }
+  ],
+  // 캠퍼스 환경개선 영상
+  campusVideo: {
+    src: '',
+    poster: '',
+    title: '캠퍼스 환경개선 영상',
+    intro: '[영상 소개]'
+  },
+  // 공약 카드뉴스: 향후 { src: './files/card1.jpg', alt: '카드뉴스 1' } 형태로 추가
+  cardNews: [],
   // president_assets 폴더에 PDF를 넣고 url에 './president_assets/파일명.pdf'를 지정하면 다운로드 버튼이 활성화됩니다.
   downloads: [
     { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: '' },
@@ -87,4 +113,5 @@ window.SITE_DATA = {
     { no: 56, date: "2004.10.05", title: "날자! 도봉의 꿈 활짝 핀다", keywords: "도봉구, 지역개발, 관광단지, 배후 주거지", media: "서울신문", url: "https://www.seoul.co.kr/news/Seoul_In/seoul_metro/2004/10/05/20041005051002", category: "기사" },
     { no: 57, date: "2003.12.31", title: "[강북 르네상스시대] (1) '10년 종합개발 본격화'", keywords: "강북 르네상스, 뉴타운, 균형발전, 도시 성장관리", media: "한국경제", url: "https://www.hankyung.com/article/2003123134451", category: "기사" }
   ]
+
 };
