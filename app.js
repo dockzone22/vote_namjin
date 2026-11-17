@@ -160,7 +160,7 @@ if (!isStatementPage) {
     }).join(''));
   }
 
-  // (8) 아카이브 (57건)
+  // (8) 아카이브
   if (Array.isArray(data.archive) && document.getElementById('archive-list')) {
     let isArchiveExpanded = false;
     const renderArchive = () => {
