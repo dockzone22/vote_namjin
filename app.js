@@ -80,28 +80,162 @@ if (!isStatementPage) {
     `).join(''));
   }
 
-  // (3) 걸어온 길 (경력 목록)
-  if (Array.isArray(data.journey) && document.getElementById('journey-list')) {
-    setHTML('journey-list', data.journey.map(item => `
-      <article class="journey-item">
-        <div class="journey-period">${escapeHTML(item.period)}</div>
-        <div class="journey-content">
-          <h3 class="journey-title">${escapeHTML(item.title)}</h3>
-          <p class="journey-desc">${escapeHTML(item.description)}</p>
-        </div>
-      </article>
+  // (3) 걸어온 길: 학력, 분야별 경력, 사진
+  if (Array.isArray(data.education) && document.getElementById('journey-education-list')) {
+    setHTML('journey-education-list', data.education.map(item => `
+      <li class="journey-education-item">
+        <span class="journey-degree">${escapeHTML(item.degree)}</span>
+        <span class="journey-school-major">${escapeHTML(item.school)} ${escapeHTML(item.major)}</span>
+      </li>
     `).join(''));
   }
 
-  // (4) 7대 대표공약 (정확히 7개)
+  if (Array.isArray(data.journey) && document.getElementById('journey-tabs') && document.getElementById('journey-panels')) {
+    const tabs = document.getElementById('journey-tabs');
+    const panels = document.getElementById('journey-panels');
+
+    tabs.innerHTML = data.journey.map((category, index) => `
+      <button type="button" class="journey-tab${index === 0 ? ' is-selected' : ''}"
+        id="journey-tab-${escapeHTML(category.id)}" role="tab"
+        aria-selected="${index === 0}" aria-controls="journey-panel-${escapeHTML(category.id)}"
+        tabindex="${index === 0 ? '0' : '-1'}">${escapeHTML(category.label)}</button>
+    `).join('');
+
+    panels.innerHTML = data.journey.map((category, index) => `
+      <div class="journey-panel" id="journey-panel-${escapeHTML(category.id)}"
+        role="tabpanel" aria-labelledby="journey-tab-${escapeHTML(category.id)}"
+        tabindex="0"${index === 0 ? '' : ' hidden'}>
+        <div class="journey-career-list">
+          ${category.items.map(item => `
+            <article class="journey-item">
+              <span class="journey-period">${escapeHTML(item.period)}</span>
+              <h4 class="journey-title">${escapeHTML(item.title)}</h4>
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    const selectJourneyTab = (tab, focus = false) => {
+      tabs.querySelectorAll('[role="tab"]').forEach(candidate => {
+        const selected = candidate === tab;
+        candidate.setAttribute('aria-selected', String(selected));
+        candidate.tabIndex = selected ? 0 : -1;
+        candidate.classList.toggle('is-selected', selected);
+        document.getElementById(candidate.getAttribute('aria-controls')).hidden = !selected;
+      });
+      if (focus) tab.focus();
+    };
+
+    tabs.querySelectorAll('[role="tab"]').forEach((tab, index, allTabs) => {
+      tab.addEventListener('click', () => selectJourneyTab(tab));
+      tab.addEventListener('keydown', event => {
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % allTabs.length;
+        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + allTabs.length) % allTabs.length;
+        else if (event.key === 'Home') nextIndex = 0;
+        else if (event.key === 'End') nextIndex = allTabs.length - 1;
+        else return;
+
+        event.preventDefault();
+        selectJourneyTab(allTabs[nextIndex], true);
+      });
+    });
+  }
+
+  if (data.journeyPhoto && document.getElementById('journey-photo')) {
+    const photoUrl = safeUrl(data.journeyPhoto.src);
+    if (photoUrl) {
+      const photo = document.createElement('img');
+      photo.className = 'journey-photo';
+      photo.src = photoUrl;
+      photo.alt = data.journeyPhoto.alt || '남진 교수 사진';
+      photo.loading = 'lazy';
+      document.getElementById('journey-photo').replaceChildren(photo);
+    }
+  }
+
+  // (4) 7대 대표공약 아코디언
   if (Array.isArray(data.pledges7) && document.getElementById('pledges-grid')) {
-    setHTML('pledges-grid', data.pledges7.map(item => `
-      <article class="pledge-card7">
-        <span class="pledge-num">${escapeHTML(item.no)}</span>
-        <h3 class="pledge-title">${escapeHTML(item.title)}</h3>
-        <p class="pledge-summary">${escapeHTML(item.summary)}</p>
-      </article>
-    `).join(''));
+    const hasContent = value => typeof value === 'string'
+      && value.trim()
+      && !/^\[[^\]]+\]$/.test(value.trim());
+    const pledgesGrid = document.getElementById('pledges-grid');
+
+    setHTML('pledges-grid', data.pledges7.map(item => {
+      const cardId = `pledge-${escapeHTML(item.id)}`;
+      const detailItems = Array.isArray(item.details)
+        ? item.details.filter(detail => detail && (hasContent(detail.title) || hasContent(detail.description)))
+        : [];
+      const detailsHtml = detailItems.length
+        ? detailItems.map(detail => `
+            <article class="pledge-detail-item">
+              ${hasContent(detail.title) ? `<h4>${escapeHTML(detail.title)}</h4>` : ''}
+              ${hasContent(detail.description) ? `<p>${escapeHTML(detail.description)}</p>` : ''}
+            </article>
+          `).join('')
+        : '<p class="pledge-pending">세부 공약 준비 중</p>';
+
+      return `
+        <article class="pledge-card7${item.no === '07' ? ' pledge-card7--wide' : ''}">
+          <h3 class="pledge-card-heading">
+            <button type="button" class="pledge-trigger" id="${cardId}-trigger"
+              aria-expanded="false" aria-controls="${cardId}-details">
+              <span class="pledge-num">${escapeHTML(item.no)}</span>
+              <span class="pledge-heading-text">
+                <span class="pledge-field">${escapeHTML(item.field)}</span>
+                <span class="pledge-title">${escapeHTML(item.title)}</span>
+              </span>
+              <span class="pledge-toggle" aria-hidden="true">＋</span>
+            </button>
+          </h3>
+          <div class="pledge-details" id="${cardId}-details"
+            aria-labelledby="${cardId}-trigger" aria-hidden="true" inert>
+            <div class="pledge-details-inner">${detailsHtml}</div>
+          </div>
+        </article>
+      `;
+    }).join(''));
+
+    pledgesGrid.querySelectorAll('.pledge-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const card = trigger.closest('.pledge-card7');
+        const panel = document.getElementById(trigger.getAttribute('aria-controls'));
+        const wasExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        const currentlyExpanded = pledgesGrid.querySelector('.pledge-trigger[aria-expanded="true"]');
+
+        if (currentlyExpanded) {
+          const currentCard = currentlyExpanded.closest('.pledge-card7');
+          const currentPanel = document.getElementById(currentlyExpanded.getAttribute('aria-controls'));
+          currentlyExpanded.setAttribute('aria-expanded', 'false');
+          currentlyExpanded.querySelector('.pledge-toggle').textContent = '＋';
+          currentCard.classList.remove('is-open');
+          currentPanel.setAttribute('aria-hidden', 'true');
+          currentPanel.inert = true;
+        }
+
+        if (!wasExpanded) {
+          trigger.setAttribute('aria-expanded', 'true');
+          trigger.querySelector('.pledge-toggle').textContent = '−';
+          card.classList.add('is-open');
+          panel.setAttribute('aria-hidden', 'false');
+          panel.inert = false;
+
+          window.setTimeout(() => {
+            if (trigger.getAttribute('aria-expanded') !== 'true') return;
+            const rect = trigger.getBoundingClientRect();
+            const header = document.querySelector('.mobile-header');
+            const topInset = header && getComputedStyle(header).position === 'fixed'
+              ? header.getBoundingClientRect().height + 12
+              : 16;
+            if (rect.top < topInset || rect.bottom > innerHeight - 12) {
+              const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+              trigger.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+            }
+          }, 240);
+        }
+      });
+    });
   }
 
   // (5) 캠퍼스 환경개선 영상

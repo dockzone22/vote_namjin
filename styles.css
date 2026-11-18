@@ -380,111 +380,308 @@ main { margin-left: var(--sidebar); }
 }
 
 /* -----------------------------------------
-   03. 걸어온 길 (경력 목록 + 사진 영역)
+   03. 걸어온 길 (학력, 경력 탭, 사진)
 ----------------------------------------- */
 .journey-layout {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1.8fr) minmax(220px, 1fr);
+  grid-template-areas:
+    "education photo"
+    "careers photo";
+  column-gap: 36px;
+  row-gap: 26px;
   align-items: start;
 }
-.journey-timeline {
+.journey-education { grid-area: education; }
+.journey-careers { grid-area: careers; }
+.journey-subheading {
+  margin: 0 0 16px;
+  color: var(--navy);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+.journey-education {
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+}
+.journey-education-list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.journey-education-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+.journey-degree {
+  min-width: 44px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #e8f0f8;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+.journey-school-major {
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.journey-careers { min-width: 0; }
+.journey-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.journey-tab {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 8px;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.journey-tab:hover { color: var(--blue); }
+.journey-tab.is-selected {
+  border-bottom-color: var(--blue);
+  color: var(--blue);
+  font-weight: 750;
+}
+.journey-tab:focus-visible {
+  outline-offset: -3px;
+  border-radius: 4px 4px 0 0;
+}
+.journey-panel[hidden] { display: none; }
+.journey-panel { min-height: 590px; }
+.journey-panel:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 4px;
+}
+.journey-career-list {
   display: flex;
   flex-direction: column;
 }
 .journey-item {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 24px;
-  padding: 26px 0;
+  padding: 16px 0;
   border-top: 1px solid var(--line);
 }
 .journey-item:last-child { border-bottom: 1px solid var(--line); }
 .journey-period {
-  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+  color: var(--blue);
+  font-size: 14px;
   font-weight: 700;
-  color: var(--sky);
-  padding-top: 2px;
+  line-height: 1.45;
 }
 .journey-title {
-  font-size: 20px;
-  font-weight: 800;
+  margin: 0;
   color: var(--navy);
-  margin-bottom: 8px;
-}
-.journey-desc {
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--muted);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 .journey-photo-col {
-  position: sticky;
-  top: 90px;
-}
-.journey-photo-card {
+  grid-area: photo;
+  justify-self: end;
+  align-self: start;
+  width: 100%;
+  max-width: 380px;
+  height: clamp(340px, 38vw, 480px);
+  margin: 0;
   border: 1px solid var(--line);
-  border-radius: 4px;
-  overflow: hidden;
+  border-radius: 8px;
   background: #ffffff;
-  box-shadow: 0 8px 24px rgba(0, 26, 54, 0.06);
+  overflow: hidden;
+}
+.journey-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 15px;
 }
 .journey-photo {
-  width: 100%;
-  height: clamp(340px, 45vh, 460px);
-  object-fit: cover;
-  object-position: center top;
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
-.journey-photo-caption {
-  padding: 12px;
-  font-size: 14px;
-  color: var(--muted);
-  text-align: center;
-  background: var(--pale);
-  border-top: 1px solid var(--line);
+
+@media (max-width: 760px) {
+  .journey-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "education"
+      "photo"
+      "careers";
+    row-gap: 24px;
+  }
+  .journey-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journey-careers { padding-top: 24px; border-top: 1px solid var(--line); }
+  .journey-panel { min-height: 0; }
+  .journey-photo-col {
+    justify-self: center;
+    width: min(100%, 360px);
+    height: 300px;
+  }
 }
 
 /* -----------------------------------------
-   04. 7대 대표공약 (4개 + 3개 2줄 배치)
+   04. 7대 대표공약 아코디언
 ----------------------------------------- */
 .pledges7-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 20px;
 }
 .pledge-card7 {
-  flex: 0 0 calc(25% - 15px);
-  max-width: calc(25% - 15px);
-  min-width: 230px;
-  background: var(--pale);
+  min-width: 0;
+  align-self: start;
+  background: #ffffff;
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 28px 22px;
-  display: flex;
-  flex-direction: column;
-  min-height: 200px;
-  box-sizing: border-box;
+  border-radius: 8px;
+  scroll-margin-top: calc(var(--header) + 16px);
+  transition: border-color 220ms ease;
+}
+.pledge-card7.is-open { border-color: var(--blue); }
+.pledge-card7--wide { grid-column: 1 / -1; }
+.pledge-card-heading { margin: 0; }
+.pledge-trigger {
+  width: 100%;
+  min-height: 104px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: #ffffff;
+  color: inherit;
+  text-align: left;
+  border-radius: 8px;
+}
+.pledge-trigger:hover .pledge-toggle { background: #f3f6f9; }
+.pledge-trigger:focus-visible {
+  outline-offset: -4px;
+  border-radius: 8px;
 }
 .pledge-num {
-  font-size: 32px;
+  font-size: 25px;
   font-weight: 800;
-  color: var(--sky);
+  color: var(--blue);
   line-height: 1;
-  margin-bottom: 14px;
+  letter-spacing: -0.04em;
+}
+.pledge-heading-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pledge-field {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 .pledge-title {
-  font-size: 20px;
+  display: block;
+  font-size: 19px;
   font-weight: 800;
   color: var(--navy);
-  margin-bottom: 10px;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
-.pledge-summary {
-  font-size: 15.5px;
-  color: var(--muted);
-  line-height: 1.65;
+.pledge-toggle {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--blue);
+  border-radius: 50%;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+.pledge-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms ease;
+}
+.pledge-card7.is-open .pledge-details { grid-template-rows: 1fr; }
+.pledge-details-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 24px;
+  background: var(--pale);
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  transition: padding 220ms ease;
+}
+.pledge-card7.is-open .pledge-details-inner { padding: 20px 24px; }
+.pledge-pending,
+.pledge-detail-item p {
   margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.pledge-detail-item + .pledge-detail-item {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.pledge-detail-item h4 {
+  margin: 0 0 6px;
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .pledges7-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .pledge-card7--wide { grid-column: auto; }
+}
+
+@media (max-width: 640px) {
+  .pledge-trigger {
+    min-height: 88px;
+    grid-template-columns: 30px minmax(0, 1fr) 44px;
+    gap: 12px;
+    padding: 16px 12px;
+  }
+  .pledge-num { font-size: 20px; }
+  .pledge-title { font-size: 17px; }
+  .pledge-details-inner { padding-right: 16px; padding-left: 16px; }
+  .pledge-card7.is-open .pledge-details-inner { padding: 18px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pledge-card7,
+  .pledge-details,
+  .pledge-details-inner { transition: none; }
 }
 
 /* -----------------------------------------
@@ -826,10 +1023,6 @@ footer > span { margin-left: auto; font-size: 12px; }
 
 @media (max-width: 1200px) and (min-width: 1025px) {
   .hero { grid-template-columns: 1.1fr 1fr; gap: 32px; }
-  .pledge-card7 {
-    flex: 0 0 calc(33.333% - 14px);
-    max-width: calc(33.333% - 14px);
-  }
 }
 
 @media (max-width: 1024px) {
@@ -900,21 +1093,6 @@ footer > span { margin-left: auto; font-size: 12px; }
   .hero {
     min-height: 0;
     padding: 56px 24px;
-  }
-  .journey-layout {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .journey-photo-col {
-    position: static;
-    order: -1;
-  }
-  .journey-photo {
-    height: 320px;
-  }
-  .pledge-card7 {
-    flex: 0 0 calc(50% - 10px);
-    max-width: calc(50% - 10px);
   }
   .archive-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -999,23 +1177,6 @@ footer > span { margin-left: auto; font-size: 12px; }
   .branch-body p {
     text-align: left;
     font-size: 15px;
-  }
-
-  /* 걸어온 길 모바일 */
-  .journey-item {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 20px 0;
-  }
-  .journey-photo { height: 260px; }
-
-  /* 7대 대표공약 모바일: 1열 */
-  .pledges7-grid { gap: 14px; }
-  .pledge-card7 {
-    flex: 0 0 100%;
-    max-width: 100%;
-    min-height: 0;
-    padding: 24px 20px;
   }
 
   /* 카드뉴스 */

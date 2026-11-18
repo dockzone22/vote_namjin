@@ -22,22 +22,69 @@ window.SITE_DATA = {
     { id: 'public', title: '공공기관', description: '[공공기관 관련 경력 및 설명]' },
     { id: 'uos', title: '서울시립대', description: '[서울시립대 관련 경력 및 설명]' }
   ],
-  // 걸어온 길: 경력 세로 목록
-  journey: [
-    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
-    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
-    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' },
-    { period: '[기간]', title: '[직위 또는 경력]', description: '[경력 설명]' }
+  // 학력
+  education: [
+    { degree: '학사', school: '서울시립대학교', major: '도시공학과' },
+    { degree: '석사', school: '서울시립대학교', major: '도시공학과' },
+    { degree: '박사', school: '일본 요코하마국립대학교', major: '도시계획학' }
   ],
-  // 7대 대표공약: 정확히 7개
+  // 분야별 경력
+  journey: [
+    {
+      id: 'uos',
+      label: '서울시립대',
+      items: [
+        { period: '2002.12 – 현재', title: '서울시립대학교 도시공학과 교수' },
+        { period: '2007.03 – 2009.02', title: '서울시립대학교 도시과학연구원 기획부장' },
+        { period: '2011.09 – 2013.06', title: '서울시립대학교 연구부처장 및 산학협력부단장' },
+        { period: '2017.03 – 2019.02', title: '서울시립대학교 기획처장' }
+      ]
+    },
+    {
+      id: 'seoul',
+      label: '서울시',
+      items: [
+        { period: '2007.07 – 2009.07', title: '강동구 도시계획위원' },
+        { period: '2009.01 – 2011.01', title: '강남구 도시계획위원' },
+        { period: '2012.01 – 2015.12', title: '서울시 학술용역심의회 위원' },
+        { period: '2014.06 – 2018.05', title: '서울시 생활계획권 수립 동남권 총괄계획가' },
+        { period: '2016.12 – 2018.12', title: '서울 수색역세권 개발 전문가 자문위원회 위원' },
+        { period: '2020.11 – 현재', title: '서울특별시 도시계획위원회 위원' },
+        { period: '2026.06 – 현재', title: 'G3 서울플랜 기획위원회 균형발전특별분과 위원장' }
+      ]
+    },
+    {
+      id: 'public',
+      label: '공공기관',
+      items: [
+        { period: '2016.04 – 현재', title: '서울주택도시공사(SH) 투자심사위원회 위원' },
+        { period: '2019.01 – 현재', title: '경기도시공사 기술자문위원회 위원' },
+        { period: '2019.09 – 현재', title: '수원특례시 도시재생위원회 위원' },
+        { period: '2024.06 – 2026.05', title: '서울주택도시공사(SH) 이사회 의장' }
+      ]
+    },
+    {
+      id: 'other',
+      label: '기타',
+      items: [
+        { period: '2024.03 – 현재', title: 'KB부동산신탁 사외이사' },
+        { period: '2024.03 – 2026.02', title: '(사)한국도시부동산학회 회장' }
+      ]
+    }
+  ],
+  journeyPhoto: {
+    src: './president_assets/jin_nam.jpg',
+    alt: '남진 교수 사진'
+  },
+  // 세부 공약은 확정되면 details 배열에 { title, description } 항목으로 추가합니다.
   pledges7: [
-    { no: '01', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '02', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '03', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '04', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '05', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '06', title: '[공약 제목]', summary: '[공약 요약]' },
-    { no: '07', title: '[공약 제목]', summary: '[공약 요약]' }
+    { id: 'education', no: '01', field: '교육', title: '가르침이 존중받고 세계와 미래로 열리는 교육', details: [] },
+    { id: 'research', no: '02', field: '연구', title: '꿈을 실현하는 연구, 세계와 경쟁하는 연구', details: [] },
+    { id: 'student-growth', no: '03', field: '학생성장', title: '소통으로 설계하고 실천으로 완성하는 학생성장', details: [] },
+    { id: 'future-campus', no: '04', field: '미래캠퍼스', title: '100년 캠퍼스, 다음 100년을 꿈꾸는 미래캠퍼스', details: [] },
+    { id: 'industry-collaboration', no: '05', field: '산학협력', title: '서울을 넘어, 함께 크는 산학협력', details: [] },
+    { id: 'workplace', no: '06', field: '일터', title: '헌신이 예우로 돌아오는 일터', details: [] },
+    { id: 'funding', no: '07', field: '재원', title: '약속으로 지키는 재원', details: [] }
   ],
   // 캠퍼스 환경개선 영상
   campusVideo: {

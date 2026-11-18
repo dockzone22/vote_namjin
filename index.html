@@ -87,7 +87,7 @@
     </div>
   </section>
 
-  <!-- 03. 걸어온 길 (경력 세로 목록 + 사진 영역) -->
+  <!-- 03. 걸어온 길 -->
   <section id="journey" class="section tinted">
     <div class="section-heading">
       <div>
@@ -97,17 +97,22 @@
       <p>서울시립대학교와 함께 성장해 온 전문성과 리더십의 발자취</p>
     </div>
     <div class="journey-layout">
-      <div id="journey-list" class="journey-timeline"></div>
-      <div class="journey-photo-col">
-        <div class="journey-photo-card">
-          <img src="./president_assets/jin_nam.jpg" alt="남진 교수 사진" class="journey-photo">
-          <div class="journey-photo-caption">남진 교수 사진 영역</div>
-        </div>
-      </div>
+      <section class="journey-education" aria-labelledby="journey-education-title">
+        <h3 id="journey-education-title" class="journey-subheading">학력</h3>
+        <ul id="journey-education-list" class="journey-education-list"></ul>
+      </section>
+      <figure id="journey-photo" class="journey-photo-col">
+        <div class="journey-photo-placeholder" aria-hidden="true">남진 교수 사진</div>
+      </figure>
+      <section class="journey-careers" aria-labelledby="journey-career-title">
+        <h3 id="journey-career-title" class="journey-subheading">경력</h3>
+        <div id="journey-tabs" class="journey-tabs" role="tablist" aria-label="분야별 경력"></div>
+        <div id="journey-panels" class="journey-panels"></div>
+      </section>
     </div>
   </section>
 
-  <!-- 04. 7대 대표공약 (4개 + 3개 2줄 배치) -->
+  <!-- 04. 7대 대표공약 아코디언 -->
   <section id="pledges" class="section">
     <div class="section-heading">
       <div>
