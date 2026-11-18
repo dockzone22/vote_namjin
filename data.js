@@ -81,7 +81,7 @@ window.SITE_DATA = {
     { id: 'education', no: '01', field: '교육', title: '가르침이 존중받고 세계와 미래로 열리는 교육', details: [] },
     { id: 'research', no: '02', field: '연구', title: '꿈을 실현하는 연구, 세계와 경쟁하는 연구', details: [] },
     { id: 'student-growth', no: '03', field: '학생성장', title: '소통으로 설계하고 실천으로 완성하는 학생성장', details: [] },
-    { id: 'future-campus', no: '04', field: '미래캠퍼스', title: '100년 캠퍼스, 다음 100년을 꿈꾸는 미래캠퍼스', details: [] },
+    { id: 'future-campus', no: '04', field: '미래캠퍼스', title: '100년 캠퍼스, 다음 100년을 꿈꾸는 미래캠퍼스', featured: true, details: [] },
     { id: 'industry-collaboration', no: '05', field: '산학협력', title: '서울을 넘어, 함께 크는 산학협력', details: [] },
     { id: 'workplace', no: '06', field: '일터', title: '헌신이 예우로 돌아오는 일터', details: [] },
     { id: 'funding', no: '07', field: '재원', title: '약속으로 지키는 재원', details: [] }

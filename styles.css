@@ -564,7 +564,8 @@ main { margin-left: var(--sidebar); }
   transition: border-color 220ms ease;
 }
 .pledge-card7.is-open { border-color: var(--blue); }
-.pledge-card7--wide { grid-column: 1 / -1; }
+.pledge-card7--featured,
+.pledge-card7--featured.is-open { border-color: var(--navy); }
 .pledge-card-heading { margin: 0; }
 .pledge-trigger {
   width: 100%;
@@ -578,6 +579,20 @@ main { margin-left: var(--sidebar); }
   color: inherit;
   text-align: left;
   border-radius: 8px;
+}
+.pledge-card7--featured .pledge-trigger {
+  background: var(--navy);
+  color: #ffffff;
+}
+.pledge-card7--featured .pledge-num,
+.pledge-card7--featured .pledge-field,
+.pledge-card7--featured .pledge-title,
+.pledge-card7--featured .pledge-toggle {
+  color: #ffffff;
+}
+.pledge-card7--featured .pledge-toggle { border-color: #ffffff; }
+.pledge-card7--featured .pledge-trigger:hover .pledge-toggle {
+  background: rgba(255, 255, 255, 0.12);
 }
 .pledge-trigger:hover .pledge-toggle { background: #f3f6f9; }
 .pledge-trigger:focus-visible {
@@ -662,7 +677,6 @@ main { margin-left: var(--sidebar); }
 
 @media (max-width: 760px) {
   .pledges7-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .pledge-card7--wide { grid-column: auto; }
 }
 
 @media (max-width: 640px) {

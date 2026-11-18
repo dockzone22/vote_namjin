@@ -177,7 +177,7 @@ if (!isStatementPage) {
         : '<p class="pledge-pending">세부 공약 준비 중</p>';
 
       return `
-        <article class="pledge-card7${item.no === '07' ? ' pledge-card7--wide' : ''}">
+        <article class="pledge-card7${item.featured ? ' pledge-card7--featured' : ''}">
           <h3 class="pledge-card-heading">
             <button type="button" class="pledge-trigger" id="${cardId}-trigger"
               aria-expanded="false" aria-controls="${cardId}-details">
