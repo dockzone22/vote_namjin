@@ -30,3 +30,55 @@
 - **공약 카드뉴스**: `data.js`의 `cardNews` 배열에 `{ src: './president_assets/파일명.jpg', alt: '설명' }` 추가
 - **소견서 본문**: `statement.html`의 `#statement-content` 영역 활성화 및 내용/PDF 등록
 - **다운로드 파일**: `president_assets` 폴더에 PDF를 넣고 `downloads` 항목의 `url`에 './president_assets/파일명.pdf' 입력
+
+## Cloudflare 비밀번호 보호 검토 사이트
+
+GitHub Pages용 원본 사이트는 그대로 유지하고, 아래 설정으로 별도의 `workers.dev` 검토 사이트를 배포할 수 있습니다. Cloudflare Worker가 모든 정적 파일 요청을 먼저 검사하고 HTTP Basic 인증을 통과한 경우에만 파일을 전달합니다. 브라우저 기본 인증 창에는 아이디와 비밀번호 입력란이 함께 나타납니다.
+
+### 로컬 실행
+
+Node.js 22.12.0 이상을 설치한 뒤 프로젝트 루트에서 실행합니다.
+
+```powershell
+npm install
+npm run test:review
+```
+
+로컬 인증 테스트용 값만 `.dev.vars`에 저장하고 개발 서버를 실행합니다. 운영용 비밀번호를 이 파일에 복사하지 마세요.
+
+```powershell
+@'
+REVIEW_USERNAME="local-review"
+REVIEW_PASSWORD="local-test-only"
+'@ | Set-Content -Encoding ascii .dev.vars
+npm run dev:review
+```
+
+개발 서버는 `http://localhost:8787`에서 열립니다. `.dev.vars`가 없거나 Secret 값이 비어 있으면 Worker가 `503`으로 파일 제공을 차단합니다. 로컬 검토는 Cloudflare에 배포하지 않으며, `npm run build:review`는 허용 목록의 파일만 `dist/review-site/`에 복사합니다.
+
+### Cloudflare 첫 배포
+
+`npm install` 후 아래 순서로 실행합니다. 로그인은 브라우저에서 Cloudflare 계정을 승인하며, `secret put`은 터미널에서 각각 비공개로 값을 입력합니다. Secret 값을 명령줄 인자, 소스 파일, 채팅에 적지 마세요.
+
+```powershell
+npx wrangler login
+npm run deploy:review
+npx wrangler secret put REVIEW_USERNAME --config wrangler.jsonc
+npx wrangler secret put REVIEW_PASSWORD --config wrangler.jsonc
+```
+
+첫 배포는 두 Secret이 없으므로 모든 콘텐츠가 `503`으로 잠긴 상태입니다. 두 Secret을 등록하면 인증 후 검토 사이트를 사용할 수 있습니다. 배포는 임시 `workers.dev` 주소를 사용하며 custom domain, route, 버전 미리보기 URL은 설정하지 않습니다.
+
+수정본을 다시 올릴 때는 아래 명령을 사용합니다.
+
+```powershell
+npm run deploy:review
+```
+
+### 업로드 범위와 검색 제외
+
+업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
+
+두 HTML 페이지의 robots 메타 태그와 Worker의 `X-Robots-Tag`는 검색 제외 지시입니다. 이는 비밀번호 보호를 대체하지 않으며 URL 직접 접근을 막지 않습니다. 현재 GitHub Pages는 계속 별도로 운영되므로 Worker 인증은 Cloudflare 검토 사이트에만 적용됩니다.
+
+나중에 공개 전환을 결정하면 인증과 검색 제외를 각각 해제해야 합니다. 인증 해제는 `worker/index.js`의 인증 차단 로직을 수정하고, 검색 제외 해제는 두 HTML의 robots 메타 태그와 Worker 응답의 `X-Robots-Tag`를 각각 조정합니다. 현재는 인증 우회 경로나 공개 전환 옵션을 제공하지 않습니다.
