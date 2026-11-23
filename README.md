@@ -70,6 +70,18 @@ npx wrangler secret put REVIEW_PASSWORD --config wrangler.jsonc
 
 Worker는 `workers.dev`, `namjin.kr` Custom Domain, 그리고 Cloudflare 프록시된 `www.namjin.kr/*` Route를 사용하며 버전 미리보기 URL은 비활성화되어 있습니다. 기존 `REVIEW_USERNAME`, `REVIEW_PASSWORD` Secret은 유지합니다. `SITE_MODE`를 아직 만들지 않았거나 값이 잘못되면 검토 모드로 잠깁니다. Wrangler로 코드를 다시 배포해도 대시보드에서 관리하는 Secret은 유지됩니다.
 
+### Cloudflare 자동 배포 설정
+
+Worker의 **Settings → Builds**에서 자동 배포 설정을 다음과 같이 유지합니다.
+
+- Git repository: `dockzone22/vote_namjin`
+- Production branch: `main`
+- Root directory: `/`
+- Build command: `npm run build:review`
+- Deploy command: `npx wrangler deploy --config wrangler.jsonc`
+
+Build command가 정적 허용 파일을 `dist/review-site/`에 준비한 후 Deploy command가 Worker를 배포합니다. 이 설정은 Cloudflare 대시보드에서 관리하며 `wrangler deploy`로 콘텐츠를 수동 배포해도 자동으로 덮어써지지 않습니다.
+
 ### 공개하기
 
 Cloudflare 대시보드에서 수동으로 전환합니다.
