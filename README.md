@@ -33,7 +33,7 @@
 
 ## Cloudflare 비밀번호 보호 검토 사이트
 
-GitHub Pages용 원본 사이트는 그대로 유지하고, 아래 설정으로 별도의 `workers.dev` 검토 사이트를 배포할 수 있습니다. Cloudflare Worker가 모든 정적 파일 요청을 먼저 검사하고 HTTP Basic 인증을 통과한 경우에만 파일을 전달합니다. 브라우저 기본 인증 창에는 아이디와 비밀번호 입력란이 함께 나타납니다.
+Cloudflare Worker는 `workers.dev`, `namjin.kr` Custom Domain, Cloudflare 프록시가 켜진 `www.namjin.kr/*` Route에서 같은 모드 정책을 적용합니다. `SITE_MODE`가 정확히 `public`일 때만 공개되며, 값이 `review`이거나 누락·오타이면 모두 HTTP Basic 인증이 필요합니다. 브라우저 기본 인증 창에는 아이디와 비밀번호 입력란이 함께 나타납니다.
 
 ### 로컬 실행
 
@@ -48,13 +48,14 @@ npm run test:review
 
 ```powershell
 @'
+SITE_MODE="review"
 REVIEW_USERNAME="local-review"
 REVIEW_PASSWORD="local-test-only"
 '@ | Set-Content -Encoding ascii .dev.vars
 npm run dev:review
 ```
 
-개발 서버는 `http://localhost:8787`에서 열립니다. `.dev.vars`가 없거나 Secret 값이 비어 있으면 Worker가 `503`으로 파일 제공을 차단합니다. 로컬 검토는 Cloudflare에 배포하지 않으며, `npm run build:review`는 허용 목록의 파일만 `dist/review-site/`에 복사합니다.
+개발 서버는 `http://localhost:8787`에서 열립니다. `.dev.vars`에 `SITE_MODE`가 없으면 검토 모드로 동작합니다. 검토 모드에서 인증 Secret이 없거나 비어 있으면 Worker가 `503`으로 파일 제공을 차단합니다. 로컬 검토는 Cloudflare에 배포하지 않으며, `npm run build:review`는 허용 목록의 파일만 `dist/review-site/`에 복사합니다.
 
 ### Cloudflare 첫 배포
 
@@ -67,18 +68,36 @@ npx wrangler secret put REVIEW_USERNAME --config wrangler.jsonc
 npx wrangler secret put REVIEW_PASSWORD --config wrangler.jsonc
 ```
 
-첫 배포는 두 Secret이 없으므로 모든 콘텐츠가 `503`으로 잠긴 상태입니다. 두 Secret을 등록하면 인증 후 검토 사이트를 사용할 수 있습니다. 배포는 임시 `workers.dev` 주소를 사용하며 custom domain, route, 버전 미리보기 URL은 설정하지 않습니다.
+Worker는 `workers.dev`, `namjin.kr` Custom Domain, 그리고 Cloudflare 프록시된 `www.namjin.kr/*` Route를 사용하며 버전 미리보기 URL은 비활성화되어 있습니다. 기존 `REVIEW_USERNAME`, `REVIEW_PASSWORD` Secret은 유지합니다. `SITE_MODE`를 아직 만들지 않았거나 값이 잘못되면 검토 모드로 잠깁니다. Wrangler로 코드를 다시 배포해도 대시보드에서 관리하는 Secret은 유지됩니다.
 
-수정본을 다시 올릴 때는 아래 명령을 사용합니다.
+### 공개하기
+
+Cloudflare 대시보드에서 수동으로 전환합니다.
+
+1. **Workers & Pages → Overview → `vote-namjin-review` → Settings → Variables and Secrets**로 이동합니다.
+2. **Add → Secret**을 선택하고 이름에 `SITE_MODE`, 값에 `public`을 입력합니다. 이미 Secret이 있으면 **Edit**에서 값을 `public`으로 바꿉니다.
+3. **Deploy**를 눌러 적용합니다. 이후 세 호스트에서 인증 없이 접속할 수 있습니다.
+
+공개 모드에서는 응답의 검색 차단 헤더를 제거하고 HTML robots 메타를 `index, follow`, `robots.txt`를 `Allow: /`로 맞춥니다. 캐시 전환 방지를 위해 응답은 공개 모드에서도 `private, no-store`입니다.
+
+### 다시 잠그기
+
+같은 **Settings → Variables and Secrets → Edit**에서 `SITE_MODE` 값을 `review`로 바꾸고 **Deploy**를 누릅니다. Secret을 삭제해도 기본값은 검토 모드지만, 실수 방지를 위해 `review`를 명시하는 것을 권장합니다. 검토 모드는 모든 호스트와 정적 파일에 Basic 인증, `noindex, nofollow`, `Disallow: /`를 적용합니다.
+
+Worker는 두 모드 모두 `private, no-store` 응답을 보내므로 브라우저·공유 캐시에 이전 공개 응답이 남지 않도록 합니다. 이미 방문자가 저장하거나 내려받은 사본까지 회수할 수는 없습니다.
+
+### 사이트 수정 후 배포하기
+
+코드·콘텐츠를 수정한 뒤 프로젝트 루트에서 아래 명령을 실행합니다.
 
 ```powershell
 npm run deploy:review
 ```
 
+이 명령은 허용 목록 파일을 준비하고 Worker 코드를 배포합니다. Cloudflare의 `SITE_MODE`와 기존 인증 Secret은 덮어쓰지 않으므로, 배포 전환 없이 현재 모드가 유지됩니다. 공개로 바꾸거나 다시 잠글 때만 대시보드에서 Secret 값을 수정하고 **Deploy**를 누릅니다.
+
 ### 업로드 범위와 검색 제외
 
 업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
 
-두 HTML 페이지의 robots 메타 태그와 Worker의 `X-Robots-Tag`는 검색 제외 지시입니다. 이는 비밀번호 보호를 대체하지 않으며 URL 직접 접근을 막지 않습니다. 현재 GitHub Pages는 계속 별도로 운영되므로 Worker 인증은 Cloudflare 검토 사이트에만 적용됩니다.
-
-나중에 공개 전환을 결정하면 인증과 검색 제외를 각각 해제해야 합니다. 인증 해제는 `worker/index.js`의 인증 차단 로직을 수정하고, 검색 제외 해제는 두 HTML의 robots 메타 태그와 Worker 응답의 `X-Robots-Tag`를 각각 조정합니다. 현재는 인증 우회 경로나 공개 전환 옵션을 제공하지 않습니다.
+Worker가 응답 시점에 두 HTML 페이지의 robots 메타 태그를 선택한 모드에 맞게 바꾸므로 모드 전환 때 정적 파일 재빌드는 필요하지 않습니다. `/robots.txt`도 모드별로 Worker가 제공합니다. 공개 모드는 인증·검색 차단을 모두 해제하므로, 공개 시점이 확정되었을 때만 전환하세요. `www` DNS 레코드의 Cloudflare 프록시 상태를 끄면 Worker Route가 요청을 가로채지 못합니다.
