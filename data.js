@@ -24,9 +24,9 @@ window.SITE_DATA = {
   ],
   // 학력
   education: [
-    { degree: '학사', school: '서울시립대학교', major: '도시공학과' },
-    { degree: '석사', school: '서울시립대학교', major: '도시공학과' },
-    { degree: '박사', school: '일본 요코하마국립대학교', major: '도시계획학' }
+    { degree: '학사', school: '서울시립대학교', major: '도시공학과(공학사)' },
+    { degree: '석사', school: '서울시립대학교', major: '도시공학과(공학석사)' },
+    { degree: '박사', school: '일본 요코하마국립대학교', major: '도시계획학(공학박사)' }
   ],
   // 분야별 경력
   journey: [
