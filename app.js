@@ -41,6 +41,11 @@ if (data.menu && document.getElementById('menu')) {
 
 // 2. 메인 페이지 전용 렌더링
 if (!isStatementPage) {
+  const statementLink = document.getElementById('statement-link');
+  const statement = Array.isArray(data.downloads) && data.downloads.find(item => item.id === 'statement');
+  const statementUrl = safeUrl(statement && statement.url);
+  if (statementLink && statementUrl) statementLink.href = statementUrl;
+
   // (1) 대표 영상 슬롯 처리
   if (data.heroVideo && data.heroVideo.src) {
     const vUrl = safeUrl(data.heroVideo.src);
@@ -280,10 +285,9 @@ if (!isStatementPage) {
       const url = safeUrl(item.url);
       return `
         <article class="download-row">
-          <span class="file-icon" aria-hidden="true">↓</span>
           <div class="file-info">
             <h3>${escapeHTML(item.title)}</h3>
-            <p>${escapeHTML(item.format)} · ${escapeHTML(item.size)}</p>
+            <p>${[item.format, item.size].filter(Boolean).map(escapeHTML).join(' · ')}</p>
           </div>
           ${url
             ? `<a href="${escapeHTML(url)}" download aria-label="${escapeHTML(item.title)} 다운로드">다운로드 ↓</a>`

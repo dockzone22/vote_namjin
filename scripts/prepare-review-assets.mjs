@@ -13,7 +13,8 @@ const allowedFiles = [
   "styles.css",
   "data.js",
   "app.js",
-  "president_assets/jin_nam.jpg"
+  "president_assets/jin_nam.jpg",
+  "president_assets/261124_입후보소견서.pdf"
 ];
 const verifiedFiles = [];
 

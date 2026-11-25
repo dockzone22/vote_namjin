@@ -99,7 +99,7 @@ window.SITE_DATA = {
   downloads: [
     { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: '' },
     { title: '후보자 이력 및 비전 선언문 요약본', format: 'PDF', size: '준비 중', url: '' },
-    { title: '시대(市大) 발전 4개년 세부 로드맵', format: 'PDF', size: '준비 중', url: '' }
+    { id: 'statement', title: '총장선거 입후보 소견서', format: 'PDF', size: '', url: './president_assets/261124_입후보소견서.pdf' }
   ],
   archive: [
     { no: 1, date: "2026.11.17", title: "서울 청년타운은 '미래 인재 키우는 인큐베이터'", keywords: "청년, 주택, 청년미래타운, 일자리", media: "세계일보", url: "https://www.segye.com/newsView/20261116514150", category: "기고" },
