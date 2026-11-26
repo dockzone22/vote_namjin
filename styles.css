@@ -503,7 +503,6 @@ main { margin-left: var(--sidebar); }
   align-self: start;
   width: 100%;
   max-width: 380px;
-  height: clamp(340px, 38vw, 480px);
   margin: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -512,7 +511,7 @@ main { margin-left: var(--sidebar); }
 }
 .journey-photo-placeholder {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 2 / 3;
   display: grid;
   place-items: center;
   color: var(--muted);
@@ -521,9 +520,7 @@ main { margin-left: var(--sidebar); }
 .journey-photo {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
+  height: auto;
 }
 
 @media (max-width: 760px) {
@@ -541,7 +538,6 @@ main { margin-left: var(--sidebar); }
   .journey-photo-col {
     justify-self: center;
     width: min(100%, 360px);
-    height: 300px;
   }
 }
 

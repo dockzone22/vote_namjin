@@ -8,7 +8,7 @@
 - `styles.css`: 디자인 시스템 (색상 변수, 반응형 레이아웃, 트리 다이어그램, 7대 공약 4+3 그리드, 아카이브 호버 버튼 등)
 - `data.js`: 메뉴, 왜 남진인가 3대 역량, 걸어온 길 경력 목록, 7대 대표공약, 영상 설정, 파일 목록, 아카이브(58건) 데이터
 - `app.js`: 데이터 기반 동적 렌더링, 영상 처리, 토글 인터랙션, 스크롤스파이, 모바일 드로어 메뉴 포커스 관리
-- `president_assets/`: 대표 사진(`jin_nam.jpg`), 언론 아카이브 원본(`interview_column_etc_1117.xlsx`), 현장 사진 등
+- `president_assets/`: 걸어온 길 사진(`교수님니트_가장긴거.jpg`), 기존 사진(`jin_nam.jpg`), 언론 아카이브 원본(`interview_column_etc_1117.xlsx`), 현장 사진 등
 
 ## 메인 페이지 섹션 순서
 1. **홈 (`#home`)**: 슬로건(`Global 서울을 이끌어가는 / 세계의 대학`), `압도적 실행력으로 실천하는 Global 대학의 완성`, [보조 문구], 7대 대표공약 버튼, 소견서 PDF 새 탭 링크, 대표 영상(16:9 준비 중 슬롯)
@@ -110,6 +110,6 @@ npm run deploy:review
 
 ### 업로드 범위와 검색 제외
 
-업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
+업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`, `president_assets/교수님니트_가장긴거.jpg`, `president_assets/261124_입후보소견서.pdf`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
 
 Worker가 응답 시점에 두 HTML 페이지의 robots 메타 태그를 선택한 모드에 맞게 바꾸므로 모드 전환 때 정적 파일 재빌드는 필요하지 않습니다. `/robots.txt`도 모드별로 Worker가 제공합니다. 공개 모드는 인증·검색 차단을 모두 해제하므로, 공개 시점이 확정되었을 때만 전환하세요. `www` DNS 레코드의 Cloudflare 프록시 상태를 끄면 Worker Route가 요청을 가로채지 못합니다.

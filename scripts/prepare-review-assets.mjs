@@ -14,6 +14,7 @@ const allowedFiles = [
   "data.js",
   "app.js",
   "president_assets/jin_nam.jpg",
+  "president_assets/교수님니트_가장긴거.jpg",
   "president_assets/261124_입후보소견서.pdf"
 ];
 const verifiedFiles = [];

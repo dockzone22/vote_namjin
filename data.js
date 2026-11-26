@@ -73,7 +73,7 @@ window.SITE_DATA = {
     }
   ],
   journeyPhoto: {
-    src: './president_assets/jin_nam.jpg',
+    src: './president_assets/교수님니트_가장긴거.jpg',
     alt: '남진 교수 사진'
   },
   // 세부 공약은 확정되면 details 배열에 { title, description } 항목으로 추가합니다.
