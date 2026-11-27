@@ -101,7 +101,7 @@ window.SITE_DATA = {
   cardNews: [],
   // president_assets 폴더에 PDF를 넣고 url에 './president_assets/파일명.pdf'를 지정하면 다운로드 버튼이 활성화됩니다.
   downloads: [
-    { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: './president_assets/261126 공약집 시안.pdf' },
+    { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: './president_assets/261126_공약집시안_압축.pdf' },
     { title: '후보자 이력 및 비전 선언문 요약본', format: 'PDF', size: '준비 중', url: '' },
     { id: 'statement', title: '총장선거 입후보 소견서', format: 'PDF', size: '', url: './president_assets/261124_입후보소견서.pdf' }
   ],

@@ -22,7 +22,7 @@
 9. **푸터**: 후보자명, 운영 주체, 문의처
 
 ## 향후 콘텐츠 입력 가이드 (`data.js`)
-- **대표·대상별 영상**: `data.js`의 `heroVideo.src`와 `audienceVideos` 각 항목의 `url`에 유튜브 주소 입력. 대상별 주소가 비어 있으면 준비 중으로 표시되며, 주소 입력 시 썸네일과 모달 재생이 활성화됨
+- **대표·대상별 영상**: `data.js`의 `heroVideo.src`와 `audienceVideos` 각 항목의 `url`에 유튜브 주소 입력. 대표 영상은 무음 자동 재생을 시도하고, 차단되면 재생 버튼을 이용함. 대상별 주소가 비어 있으면 준비 중으로 표시되며, 주소 입력 시 썸네일과 모달 재생이 활성화됨. 로컬에서는 파일을 직접 여는 대신 프로젝트 폴더에서 `python -m http.server 8000`을 실행하고 `http://localhost:8000`으로 확인
 - **왜 남진인가? 경력 설명**: `data.js`의 `why` 배열 3개 항목의 `description` 수정
 - **걸어온 길**: `data.js`의 `education` 배열에서 학력, `journey` 배열의 분야별 `items`에서 경력 (`period`, `title`), `journeyPhoto`에서 사진 경로와 대체텍스트 수정
 - **7대 대표공약**: `data.js`의 `pledges7` 배열에서 공약을 관리하고, 각 `details` 배열에 `{ title, description }` 형식의 확정된 세부 공약을 추가 (미입력 항목은 사이트에서 준비 중으로 표시)
@@ -110,6 +110,6 @@ npm run deploy:review
 
 ### 업로드 범위와 검색 제외
 
-업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`, `president_assets/교수님니트_가장긴거.jpg`, `president_assets/261124_입후보소견서.pdf`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
+업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`, `president_assets/교수님니트_가장긴거.jpg`, `president_assets/261124_입후보소견서.pdf`, `president_assets/261126_공약집시안_압축.pdf`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
 
 Worker가 응답 시점에 두 HTML 페이지의 robots 메타 태그를 선택한 모드에 맞게 바꾸므로 모드 전환 때 정적 파일 재빌드는 필요하지 않습니다. `/robots.txt`도 모드별로 Worker가 제공합니다. 공개 모드는 인증·검색 차단을 모두 해제하므로, 공개 시점이 확정되었을 때만 전환하세요. `www` DNS 레코드의 Cloudflare 프록시 상태를 끄면 Worker Route가 요청을 가로채지 못합니다.

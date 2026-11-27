@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
 
@@ -21,7 +21,8 @@ function renderDownloads(changeData = () => {}) {
     },
     location: { href: "http://localhost:8787/index.html", pathname: "/index.html" },
     matchMedia: () => ({ matches: false, addEventListener: () => {} }),
-    URL
+    URL,
+    URLSearchParams
   });
   vm.runInContext(dataSource, context);
   changeData(context.window.SITE_DATA);
@@ -29,8 +30,10 @@ function renderDownloads(changeData = () => {}) {
   return { link, list, data: context.window.SITE_DATA };
 }
 
-test("statement button and download use the same PDF while other items remain pending", async () => {
-  const { link, list, data } = renderDownloads();
+test("statement button and download use the same PDF while empty items remain pending", async () => {
+  const { link, list, data } = renderDownloads(data => {
+    data.downloads[0].url = "";
+  });
   const statement = data.downloads.find(item => item.id === "statement");
   assert.equal(statement.size, "");
   assert.equal(link.href, new URL(statement.url, "http://localhost:8787/index.html").href);
@@ -58,4 +61,12 @@ test("changing the statement URL updates both links", () => {
   });
   assert.equal(link.href, "http://localhost:8787/president_assets/updated.pdf");
   assert.ok(list.innerHTML.includes(`href="${link.href}" download`));
+});
+
+test("the configured pledge PDF download points to the existing renamed file", async () => {
+  const { list, data } = renderDownloads();
+  const pledge = data.downloads[0];
+  assert.equal(pledge.url, "./president_assets/261126_공약집시안_압축.pdf");
+  assert.ok(list.innerHTML.includes(`href="${new URL(pledge.url, "http://localhost:8787/index.html").href}" download`));
+  assert.ok((await stat(new URL(`../${pledge.url.slice(2)}`, import.meta.url))).isFile());
 });

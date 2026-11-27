@@ -52,7 +52,8 @@ function setup(changeData = () => {}) {
     location: { href: "http://localhost/index.html", pathname: "/index.html" },
     matchMedia: () => ({ matches: false, addEventListener: () => {} }),
     console: { warn: message => warnings.push(message) },
-    URL
+    URL,
+    URLSearchParams
   });
   vm.runInContext(dataSource, context);
   changeData(context.window.SITE_DATA);
@@ -69,9 +70,10 @@ function setup(changeData = () => {}) {
   return { hero, cards, buttons, player, title, link, dialog, listeners, warnings };
 }
 
-test("representative player does not autoplay and missing audience links stay disabled", () => {
+test("representative player attempts muted autoplay and missing audience links stay disabled", () => {
   const { hero, cards } = setup();
-  assert.equal(hero.player.src, "https://www.youtube.com/embed/jgwUU38TEPQ");
+  assert.equal(hero.player.src, "https://www.youtube.com/embed/jgwUU38TEPQ?autoplay=1&mute=1");
+  assert.match(hero.player.allow, /\bautoplay\b/);
   assert.equal(hero.player.title, "남진 총장 후보 대표 영상");
   assert.equal((cards.innerHTML.match(/ disabled>/g) || []).length, 3);
   assert.equal((cards.innerHTML.match(/준비 중/g) || []).length, 3);

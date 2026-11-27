@@ -71,10 +71,13 @@ if (!isStatementPage) {
     }
     return id;
   };
-  const createYoutubePlayer = (id, title, autoplay = false) => {
+  const createYoutubePlayer = (id, title, autoplay = false, muted = false) => {
     const player = document.createElement('iframe');
     player.className = 'hero-video-element';
-    player.src = `https://www.youtube.com/embed/${id}${autoplay ? '?autoplay=1' : ''}`;
+    const params = new URLSearchParams();
+    if (autoplay) params.set('autoplay', '1');
+    if (muted) params.set('mute', '1');
+    player.src = `https://www.youtube.com/embed/${id}${params.size ? `?${params}` : ''}`;
     player.title = title;
     player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
     player.allowFullscreen = true;
@@ -84,7 +87,7 @@ if (!isStatementPage) {
   const heroId = youtubeId(data.heroVideo && data.heroVideo.src);
   const heroSlot = document.getElementById('hero-video-slot');
   if (heroId && heroSlot) {
-    heroSlot.replaceWith(createYoutubePlayer(heroId, data.heroVideo.title || '남진 총장 후보 대표 영상'));
+    heroSlot.replaceWith(createYoutubePlayer(heroId, data.heroVideo.title || '남진 총장 후보 대표 영상', true, true));
   }
 
   const audienceContainer = document.getElementById('audience-videos');
