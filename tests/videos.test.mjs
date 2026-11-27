@@ -71,7 +71,9 @@ function setup(changeData = () => {}) {
 }
 
 test("representative player attempts muted autoplay and missing audience links stay disabled", () => {
-  const { hero, cards } = setup();
+  const { hero, cards } = setup(data => {
+    data.audienceVideos.forEach(video => { video.url = ""; });
+  });
   assert.equal(hero.player.src, "https://www.youtube.com/embed/jgwUU38TEPQ?autoplay=1&mute=1");
   assert.match(hero.player.allow, /\bautoplay\b/);
   assert.equal(hero.player.title, "남진 총장 후보 대표 영상");

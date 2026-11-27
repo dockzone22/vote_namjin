@@ -16,7 +16,7 @@ window.SITE_DATA = {
     title: '남진 총장 후보 대표 영상'
   },
   audienceVideos: [
-    { title: '교수님들께', url: '' },
+    { title: '교수님들께', url: 'https://youtu.be/jgwUU38TEPQ' },
     { title: '직원분들께', url: '' },
     { title: '학생분들께', url: '' }
   ],

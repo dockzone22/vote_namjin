@@ -29,87 +29,29 @@
 - **캠퍼스 환경개선 영상**: `data.js`의 `campusVideo.src`, `intro` 수정
 - **공약 카드뉴스**: `data.js`의 `cardNews` 배열에 `{ src: './president_assets/파일명.jpg', alt: '설명' }` 추가
 - **소견서 본문**: `statement.html`의 `#statement-content` 영역 활성화 및 내용/PDF 등록
-- **다운로드 파일**: `president_assets` 폴더에 PDF를 넣고 `downloads` 항목의 `url`에 './president_assets/파일명.pdf' 입력. 소견서 항목(`id: 'statement'`)의 URL은 홈 버튼에도 사용됨. Cloudflare 배포에 새 파일을 포함하려면 `scripts/prepare-review-assets.mjs`의 허용 목록에도 추가
+- **다운로드 파일**: `president_assets` 폴더에 PDF를 넣고 `downloads` 항목의 `url`에 './president_assets/파일명.pdf' 입력. 소견서 항목(`id: 'statement'`)의 URL은 홈 버튼에도 사용됨. GitHub Pages에서 제공하려면 해당 파일도 저장소에 포함해야 함
 
-## Cloudflare 비밀번호 보호 검토 사이트
+## 홈페이지 운영
 
-Cloudflare Worker는 `workers.dev`, `namjin.kr` Custom Domain, Cloudflare 프록시가 켜진 `www.namjin.kr/*` Route에서 같은 모드 정책을 적용합니다. `SITE_MODE`가 정확히 `public`일 때만 공개되며, 값이 `review`이거나 누락·오타이면 모두 HTTP Basic 인증이 필요합니다. 브라우저 기본 인증 창에는 아이디와 비밀번호 입력란이 함께 나타납니다.
+운영 대상은 GitHub 저장소 `dockzone22/vote_namjin`의 `main` 브랜치 `/(root)`에서 게시하는 GitHub Pages와 공식 주소 `https://namjin.uos.ac.kr`입니다. Cloudflare는 `namjin.kr`과 `www.namjin.kr`의 DNS 및 공식 주소로 이동하는 Redirect Rule 용도로 유지합니다. 실제 설정과 주소 이동은 대시보드에서 별도로 확인해야 합니다.
 
-### 로컬 실행
+1. 사이트 파일을 수정합니다.
+2. 프로젝트 폴더에서 `python -m http.server 8000`을 실행하고 `http://localhost:8000`에서 화면·다운로드·영상을 확인합니다.
+3. 변경할 파일을 검토한 뒤 commit·push합니다. PDF와 이미지도 Git에 포함되어야 GitHub Pages에서 제공됩니다.
+4. GitHub Pages 배포가 완료됐는지 확인한 뒤 공식 주소에서 실제 화면과 링크를 확인합니다.
 
-Node.js 22.12.0 이상을 설치한 뒤 프로젝트 루트에서 실행합니다.
+공식 주소의 루트 `CNAME`은 `namjin.uos.ac.kr`이어야 합니다. 현재 로컬 `CNAME`은 `namjin.kr`이지만 원격 `main`은 이미 `namjin.uos.ac.kr`입니다. 로컬 변경을 보존하면서 원격 변경을 동기화한 뒤 GitHub Pages 사용자 지정 도메인 설정과 일치하는지 확인하세요.
 
-```powershell
-npm install
-npm run test:review
-```
+두 HTML 파일에는 `noindex, nofollow` 메타 태그가 있습니다. GitHub Pages는 Worker의 검색 설정과 비밀번호 인증을 적용하지 않으므로 검색 노출을 원한다면 해당 태그를 별도로 검토해야 합니다. GitHub Pages에 게시된 파일은 공개됩니다.
 
-로컬 인증 테스트용 값만 `.dev.vars`에 저장하고 개발 서버를 실행합니다. 운영용 비밀번호를 이 파일에 복사하지 마세요.
+### 일시적으로 사이트 내리기
 
-```powershell
-@'
-SITE_MODE="review"
-REVIEW_USERNAME="local-review"
-REVIEW_PASSWORD="local-test-only"
-'@ | Set-Content -Encoding ascii .dev.vars
-npm run dev:review
-```
+GitHub Pages의 **Unpublish site**는 현재 배포를 내리며 저장소와 설정은 유지합니다. Unpublish 중에는 공개 준비가 되기 전까지 게시 브랜치에 push하지 마세요. 새 배포로 다시 공개될 수 있습니다.
 
-개발 서버는 `http://localhost:8787`에서 열립니다. `.dev.vars`에 `SITE_MODE`가 없으면 검토 모드로 동작합니다. 검토 모드에서 인증 Secret이 없거나 비어 있으면 Worker가 `503`으로 파일 제공을 차단합니다. 로컬 검토는 Cloudflare에 배포하지 않으며, `npm run build:review`는 허용 목록의 파일만 `dist/review-site/`에 복사합니다.
+다시 공개할 때는 기존 도메인과 DNS 설정을 유지하고 게시 브랜치에 커밋을 push하여 새 배포를 진행합니다. 도메인을 삭제·재등록하거나 DNS를 변경할 필요는 없습니다. 단, 현재 `CNAME`과 실제 Pages 도메인 설정이 서로 일치하는지 먼저 확인하세요. 자세한 내용은 [GitHub의 Unpublish 안내](https://docs.github.com/en/pages/getting-started-with-github-pages/unpublishing-a-github-pages-site)를 참고하세요.
 
-### Cloudflare 첫 배포
+### 보관용 Cloudflare Worker
 
-`npm install` 후 아래 순서로 실행합니다. 로그인은 브라우저에서 Cloudflare 계정을 승인하며, `secret put`은 터미널에서 각각 비공개로 값을 입력합니다. Secret 값을 명령줄 인자, 소스 파일, 채팅에 적지 마세요.
+기존 Worker 코드와 설정은 보관용이며 공식 GitHub Pages 운영에 필요하지 않습니다. Worker의 Git 자동 배포 연결은 Cloudflare 대시보드의 해당 Worker **Settings → Builds**에서 사용자가 직접 해제합니다. 연결 상태와 Redirect Rule은 이 문서에서 검증하지 않았습니다.
 
-```powershell
-npx wrangler login
-npm run deploy:review
-npx wrangler secret put REVIEW_USERNAME --config wrangler.jsonc
-npx wrangler secret put REVIEW_PASSWORD --config wrangler.jsonc
-```
-
-Worker는 `workers.dev`, `namjin.kr` Custom Domain, 그리고 Cloudflare 프록시된 `www.namjin.kr/*` Route를 사용하며 버전 미리보기 URL은 비활성화되어 있습니다. 기존 `REVIEW_USERNAME`, `REVIEW_PASSWORD` Secret은 유지합니다. `SITE_MODE`를 아직 만들지 않았거나 값이 잘못되면 검토 모드로 잠깁니다. Wrangler로 코드를 다시 배포해도 대시보드에서 관리하는 Secret은 유지됩니다.
-
-### Cloudflare 자동 배포 설정
-
-Worker의 **Settings → Builds**에서 자동 배포 설정을 다음과 같이 유지합니다.
-
-- Git repository: `dockzone22/vote_namjin`
-- Production branch: `main`
-- Root directory: `/`
-- Build command: `npm run build:review`
-- Deploy command: `npx wrangler deploy --config wrangler.jsonc`
-
-Build command가 정적 허용 파일을 `dist/review-site/`에 준비한 후 Deploy command가 Worker를 배포합니다. 이 설정은 Cloudflare 대시보드에서 관리하며 `wrangler deploy`로 콘텐츠를 수동 배포해도 자동으로 덮어써지지 않습니다.
-
-### 공개하기
-
-Cloudflare 대시보드에서 수동으로 전환합니다.
-
-1. **Workers & Pages → Overview → `vote-namjin-review` → Settings → Variables and Secrets**로 이동합니다.
-2. **Add → Secret**을 선택하고 이름에 `SITE_MODE`, 값에 `public`을 입력합니다. 이미 Secret이 있으면 **Edit**에서 값을 `public`으로 바꿉니다.
-3. **Deploy**를 눌러 적용합니다. 이후 세 호스트에서 인증 없이 접속할 수 있습니다.
-
-공개 모드에서는 응답의 검색 차단 헤더를 제거하고 HTML robots 메타를 `index, follow`, `robots.txt`를 `Allow: /`로 맞춥니다. 캐시 전환 방지를 위해 응답은 공개 모드에서도 `private, no-store`입니다.
-
-### 다시 잠그기
-
-같은 **Settings → Variables and Secrets → Edit**에서 `SITE_MODE` 값을 `review`로 바꾸고 **Deploy**를 누릅니다. Secret을 삭제해도 기본값은 검토 모드지만, 실수 방지를 위해 `review`를 명시하는 것을 권장합니다. 검토 모드는 모든 호스트와 정적 파일에 Basic 인증, `noindex, nofollow`, `Disallow: /`를 적용합니다.
-
-Worker는 두 모드 모두 `private, no-store` 응답을 보내므로 브라우저·공유 캐시에 이전 공개 응답이 남지 않도록 합니다. 이미 방문자가 저장하거나 내려받은 사본까지 회수할 수는 없습니다.
-
-### 사이트 수정 후 배포하기
-
-코드·콘텐츠를 수정한 뒤 프로젝트 루트에서 아래 명령을 실행합니다.
-
-```powershell
-npm run deploy:review
-```
-
-이 명령은 허용 목록 파일을 준비하고 Worker 코드를 배포합니다. Cloudflare의 `SITE_MODE`와 기존 인증 Secret은 덮어쓰지 않으므로, 배포 전환 없이 현재 모드가 유지됩니다. 공개로 바꾸거나 다시 잠글 때만 대시보드에서 Secret 값을 수정하고 **Deploy**를 누릅니다.
-
-### 업로드 범위와 검색 제외
-
-업로드 대상은 `index.html`, `statement.html`, `styles.css`, `data.js`, `app.js`, `president_assets/jin_nam.jpg`, `president_assets/교수님니트_가장긴거.jpg`, `president_assets/261124_입후보소견서.pdf`, `president_assets/261126_공약집시안_압축.pdf`로 제한됩니다. 원본 엑셀, 미리보기 이미지, 미사용 현장 사진, 설정 파일, Worker 소스, 비밀 파일은 정적 파일 폴더에 복사되지 않습니다. Cloudflare Workers Static Assets의 현재 개별 파일 제한은 25 MiB이며, 준비 스크립트가 허용 목록 파일의 크기를 확인합니다.
-
-Worker가 응답 시점에 두 HTML 페이지의 robots 메타 태그를 선택한 모드에 맞게 바꾸므로 모드 전환 때 정적 파일 재빌드는 필요하지 않습니다. `/robots.txt`도 모드별로 Worker가 제공합니다. 공개 모드는 인증·검색 차단을 모두 해제하므로, 공개 시점이 확정되었을 때만 전환하세요. `www` DNS 레코드의 Cloudflare 프록시 상태를 끄면 Worker Route가 요청을 가로채지 못합니다.
+`npm run build:review`, `npm run dev:review`, `npm run deploy:review`는 과거 Worker용 명령입니다. 특히 `deploy:review`는 Worker에 실제 배포하므로 일반적인 GitHub Pages 업데이트에 사용하지 마세요. Worker용 준비 스크립트의 개별 파일 제한 25 MiB는 GitHub Pages 게시 제한과 별개이며, Worker 배포 시에는 계속 적용됩니다. GitHub Pages의 제한은 [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)를 확인하세요.
