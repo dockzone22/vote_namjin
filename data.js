@@ -10,12 +10,16 @@ window.SITE_DATA = {
     { id: 'downloads', label: '파일 받기' },
     { id: 'archive', label: '아카이브' }
   ],
-  // 대표 영상: 향후 영상 파일 경로(HTTPS URL 또는 상대경로)를 입력하면 비디오로 전환됩니다.
+  // 유튜브 주소를 입력하면 영상이 표시됩니다. 대상별 영상은 빈 주소일 때 준비 중으로 표시됩니다.
   heroVideo: {
-    src: '',
-    poster: '',
+    src: 'https://youtu.be/jgwUU38TEPQ',
     title: '남진 총장 후보 대표 영상'
   },
+  audienceVideos: [
+    { title: '교수님들께', url: '' },
+    { title: '직원분들께', url: '' },
+    { title: '학생분들께', url: '' }
+  ],
   // 왜 남진인가? 3개 분야
   why: [
     { id: 'seoul', title: '서울시', description: '[서울시 관련 경력 및 설명]' },
@@ -97,7 +101,7 @@ window.SITE_DATA = {
   cardNews: [],
   // president_assets 폴더에 PDF를 넣고 url에 './president_assets/파일명.pdf'를 지정하면 다운로드 버튼이 활성화됩니다.
   downloads: [
-    { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: '' },
+    { title: '남진 총장 후보자 공약집 (전체본)', format: 'PDF', size: '준비 중', url: './president_assets/261126 공약집 시안.pdf' },
     { title: '후보자 이력 및 비전 선언문 요약본', format: 'PDF', size: '준비 중', url: '' },
     { id: 'statement', title: '총장선거 입후보 소견서', format: 'PDF', size: '', url: './president_assets/261124_입후보소견서.pdf' }
   ],

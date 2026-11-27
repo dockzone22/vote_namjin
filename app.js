@@ -46,29 +46,87 @@ if (!isStatementPage) {
   const statementUrl = safeUrl(statement && statement.url);
   if (statementLink && statementUrl) statementLink.href = statementUrl;
 
-  // (1) 대표 영상 슬롯 처리
-  if (data.heroVideo && data.heroVideo.src) {
-    const vUrl = safeUrl(data.heroVideo.src);
-    if (vUrl) {
-      const slot = document.getElementById('hero-video-slot');
-      if (slot) {
-        const video = document.createElement('video');
-        video.src = vUrl;
-        if (data.heroVideo.poster) video.poster = safeUrl(data.heroVideo.poster);
-        video.playsInline = true;
-        video.controls = true;
-        video.muted = true;
-        video.loop = true;
-        video.className = 'hero-video-element';
-        video.setAttribute('aria-label', data.heroVideo.title || '남진 총장 후보 대표 영상');
-        
-        const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!prefersReduced) {
-          video.autoplay = true;
-        }
-        slot.replaceWith(video);
+  // (1) 대표 및 대상별 영상
+  const youtubeId = value => {
+    if (!value) return '';
+    let url;
+    try {
+      url = new URL(value);
+    } catch {
+      console.warn('유효하지 않은 YouTube 영상 주소입니다.');
+      return '';
+    }
+    let id = '';
+    if (url.protocol === 'https:') {
+      if (url.hostname === 'youtu.be') {
+        id = url.pathname.slice(1);
+      } else if (['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(url.hostname)) {
+        if (url.pathname === '/watch') id = url.searchParams.get('v') || '';
+        else id = (url.pathname.match(/^\/(?:embed|shorts)\/([^/]+)\/?$/) || [])[1] || '';
       }
     }
+    if (!/^[\w-]{11}$/.test(id)) {
+      console.warn('유효하지 않은 YouTube 영상 주소입니다.');
+      return '';
+    }
+    return id;
+  };
+  const createYoutubePlayer = (id, title, autoplay = false) => {
+    const player = document.createElement('iframe');
+    player.className = 'hero-video-element';
+    player.src = `https://www.youtube.com/embed/${id}${autoplay ? '?autoplay=1' : ''}`;
+    player.title = title;
+    player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    player.allowFullscreen = true;
+    return player;
+  };
+
+  const heroId = youtubeId(data.heroVideo && data.heroVideo.src);
+  const heroSlot = document.getElementById('hero-video-slot');
+  if (heroId && heroSlot) {
+    heroSlot.replaceWith(createYoutubePlayer(heroId, data.heroVideo.title || '남진 총장 후보 대표 영상'));
+  }
+
+  const audienceContainer = document.getElementById('audience-videos');
+  const videoDialog = document.getElementById('video-dialog');
+  if (audienceContainer && videoDialog && Array.isArray(data.audienceVideos)) {
+    const dialogTitle = document.getElementById('video-dialog-title');
+    const dialogPlayer = document.getElementById('video-dialog-player');
+    const dialogLink = document.getElementById('video-dialog-youtube');
+    const closeButton = document.getElementById('video-dialog-close');
+    const videos = data.audienceVideos.map(item => ({ ...item, id: youtubeId(item.url) }));
+    let opener = null;
+
+    audienceContainer.innerHTML = videos.map((item, index) => `
+      <button type="button" class="audience-video-card" data-video-index="${index}"${item.id ? '' : ' disabled'}>
+        <span class="audience-video-thumbnail">
+          ${item.id ? `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="" loading="lazy">` : ''}
+          <span class="audience-video-play" aria-hidden="true">▶</span>
+        </span>
+        <span class="audience-video-title">${escapeHTML(item.title)}</span>
+        ${item.id ? '' : '<span class="audience-video-pending">준비 중</span>'}
+      </button>
+    `).join('');
+    audienceContainer.querySelectorAll('button:not(:disabled)').forEach(button => {
+      button.addEventListener('click', () => {
+        const video = videos[Number(button.dataset.videoIndex)];
+        opener = button;
+        dialogTitle.textContent = video.title;
+        dialogLink.href = `https://www.youtube.com/watch?v=${video.id}`;
+        dialogPlayer.replaceChildren(createYoutubePlayer(video.id, video.title, true));
+        videoDialog.showModal();
+      });
+    });
+    closeButton.addEventListener('click', () => videoDialog.close());
+    videoDialog.addEventListener('cancel', event => {
+      event.preventDefault();
+      videoDialog.close();
+    });
+    videoDialog.addEventListener('close', () => {
+      dialogPlayer.replaceChildren();
+      if (opener) opener.focus();
+      opener = null;
+    });
   }
 
   // (2) 왜 남진인가? 3개 분야

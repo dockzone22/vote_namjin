@@ -56,9 +56,10 @@
         <div class="video-placeholder-inner">
           <span class="play-icon" aria-hidden="true">▷</span>
           <strong>대표 영상 준비 중</strong>
-          <small>등록 후 자동 재생 및 컨트롤러가 제공됩니다.</small>
+          <small>영상이 등록되면 이곳에서 볼 수 있습니다.</small>
         </div>
       </div>
+      <div id="audience-videos" class="audience-videos" aria-label="대상별 영상"></div>
     </div>
   </section>
 
@@ -202,6 +203,15 @@
     <span>총장선거 홍보 홈페이지</span>
   </footer>
 </main>
+
+<dialog id="video-dialog" class="video-dialog" aria-labelledby="video-dialog-title">
+  <div class="video-dialog-header">
+    <h2 id="video-dialog-title"></h2>
+    <button id="video-dialog-close" type="button" aria-label="영상 닫기" autofocus>×</button>
+  </div>
+  <div id="video-dialog-player" class="video-dialog-player"></div>
+  <a id="video-dialog-youtube" class="video-dialog-link" target="_blank" rel="noopener noreferrer">YouTube에서 보기 (새 탭) →</a>
+</dialog>
 
 <a id="back-top" class="back-top" href="#home" aria-label="맨 위로 이동" hidden>↑</a>
 <noscript><div class="noscript">콘텐츠와 메뉴를 정상적으로 표시하려면 JavaScript를 활성화해주세요.</div></noscript>
